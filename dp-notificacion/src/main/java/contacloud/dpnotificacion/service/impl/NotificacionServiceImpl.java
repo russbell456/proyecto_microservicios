@@ -181,6 +181,8 @@ public class NotificacionServiceImpl implements NotificacionService {
             throw new RuntimeException("Error al enviar el correo: " + e.getMessage());
         }
 
+
     }
+
 
 }
