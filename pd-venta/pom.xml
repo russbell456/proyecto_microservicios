@@ -36,6 +36,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.28</version> <!-- o versión más reciente -->
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Dependencia de Caffeine Cache -->
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
@@ -124,10 +131,14 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
+					<annotationProcessorPaths>
+
+					<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-						</path>
+							<version>1.18.28</version> <!-- o versión más reciente -->
+
+					</annotationProcessorPaths>
+
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>

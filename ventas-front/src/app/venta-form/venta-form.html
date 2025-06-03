@@ -1,0 +1,21 @@
+<form [formGroup]="ventaForm" (ngSubmit)="onSubmit()">
+  <label>ID Cliente:
+    <input type="number" formControlName="clienteId" />
+  </label><br />
+
+  <label>Fecha:
+    <input type="date" formControlName="fecha" />
+  </label><br />
+
+  <label>Total:
+    <input type="number" formControlName="total" />
+  </label><br />
+
+  <label>Estado:
+    <input type="text" formControlName="estado" />
+  </label><br />
+
+  <button type="submit">Registrar Venta</button>
+</form>
+
+<p>{{ mensaje }}</p>
