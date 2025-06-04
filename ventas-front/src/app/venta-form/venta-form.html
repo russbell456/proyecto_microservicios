@@ -1,18 +1,43 @@
 <form [formGroup]="ventaForm" (ngSubmit)="onSubmit()">
+
   <label>ID Cliente:
-    <input type="number" formControlName="clienteId" />
+    <input formControlName="clienteId" type="number" />
   </label><br />
 
-  <label>Fecha:
-    <input type="date" formControlName="fecha" />
-  </label><br />
-
-  <label>Total:
-    <input type="number" formControlName="total" />
+  <label>Fecha Emisión:
+    <input formControlName="fechaEmision" type="datetime-local" />
   </label><br />
 
   <label>Estado:
-    <input type="text" formControlName="estado" />
+    <input formControlName="estado" type="text" />
+  </label><br />
+
+  <h3>Detalles</h3>
+  <div formArrayName="detalles" *ngFor="let detalle of detalles.controls; let i = index">
+    <div [formGroupName]="i" style="margin-bottom: 10px;">
+      <input formControlName="productoId" placeholder="Producto ID" type="number" />
+      <input formControlName="cantidad" placeholder="Cantidad" type="number" />
+      <input formControlName="precioUnitario" placeholder="Precio Unitario" type="number" step="0.01" />
+      <input formControlName="subtotal" placeholder="Subtotal" type="number" [disabled]="true" />
+      <button type="button" (click)="removeDetalle(i)">Eliminar</button>
+    </div>
+  </div>
+  <button type="button" (click)="addDetalle()">Agregar Detalle</button>
+
+  <h3>Pagos</h3>
+  <div formArrayName="pagos" *ngFor="let pago of pagos.controls; let j = index">
+    <div [formGroupName]="j" style="margin-bottom: 10px;">
+      <input formControlName="fechaPago" type="datetime-local" />
+      <input formControlName="monto" type="number" step="0.01" />
+      <input formControlName="metodoPago" placeholder="Método de Pago" type="text" />
+      <input formControlName="referencia" placeholder="Referencia" type="text" />
+      <button type="button" (click)="removePago(j)">Eliminar</button>
+    </div>
+  </div>
+  <button type="button" (click)="addPago()">Agregar Pago</button>
+
+  <label>Total:
+    <input formControlName="total" type="number" [disabled]="true" />
   </label><br />
 
   <button type="submit">Registrar Venta</button>

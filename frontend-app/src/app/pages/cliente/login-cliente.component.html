@@ -1,0 +1,13 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+  <label>
+    Correo:
+    <input formControlName="correo" type="email" />
+  </label>
+
+  <label>
+    DNI:
+    <input formControlName="dni" type="password" />
+  </label>
+
+  <button type="submit">Iniciar Sesión</button>
+</form>

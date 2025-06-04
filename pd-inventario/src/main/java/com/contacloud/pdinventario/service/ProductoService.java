@@ -29,9 +29,16 @@ public class ProductoService {
     public Producto reducirStock(Long id, int cantidad) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        producto.setStock(producto.getStock() - cantidad);
+
+        int nuevoStock = producto.getStock() - cantidad;
+        if (nuevoStock < 0) {
+            throw new RuntimeException("Stock insuficiente");
+        }
+
+        producto.setStock(nuevoStock);
         return productoRepository.save(producto);
     }
+
 
     public void actualizarStock(Long productoId, Integer cantidad) {
         Producto producto = productoRepository.findById(productoId)

@@ -1,10 +1,13 @@
     package com.example.pdcliente.controller;
 
+    import com.example.pdcliente.dto.ClienteLoginDTO;
     import com.example.pdcliente.entity.Cliente;
     import com.example.pdcliente.service.ClienteService;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.server.ResponseStatusException;
 
     import java.util.List;
 
@@ -42,5 +45,13 @@
             clienteService.eliminar(id);
             return ResponseEntity.noContent().build();
         }
+        @PostMapping("/login")
+        public ResponseEntity<Cliente> login(@RequestBody ClienteLoginDTO loginDTO) {
+            return clienteService.login(loginDTO)
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas o cliente inactivo"));
+        }
+
+
 
     }

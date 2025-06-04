@@ -1,5 +1,6 @@
 package com.example.pdcliente.service.impl;
 
+import com.example.pdcliente.dto.ClienteLoginDTO;
 import com.example.pdcliente.entity.Cliente;
 import com.example.pdcliente.repository.ClienteRepository;
 import com.example.pdcliente.service.ClienteService;
@@ -38,7 +39,14 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.save(cliente);
     }
 
-
+    @Override
+    public Optional<Cliente> login(ClienteLoginDTO loginDTO) {
+        Cliente cliente = clienteRepository.findByEmailAndRucDni(loginDTO.getEmail(), loginDTO.getRucDni());
+        if (cliente != null && "activo".equalsIgnoreCase(cliente.getEstado())) {
+            return Optional.of(cliente);
+        }
+        return Optional.empty();
+    }
     @Override
     public Cliente actualizar(Integer id, Cliente cliente) {
         if (!clienteRepository.existsById(id)){
