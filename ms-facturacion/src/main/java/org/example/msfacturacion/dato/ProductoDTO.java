@@ -1,6 +1,7 @@
 package org.example.msfacturacion.dato;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
 
 @Data

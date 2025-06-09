@@ -1,5 +1,6 @@
 package org.example.msfacturacion.entity;
 
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class FacturaVenta {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factura_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore // rompe ciclo de serialización
     private Factura factura;
 
     public Long getId() {

@@ -28,6 +28,12 @@ public class VentaController {
         VentaDTO factura = ventaService.obtenerVenta(id);
         return ResponseEntity.ok(factura);
     }
+    @GetMapping("/pagadas")
+    public ResponseEntity<List<VentaDTO>> listarVentasPagadas() {
+        List<VentaDTO> ventasPagadas = ventaService.listarVentasPorEstado("PAGADO");
+        return ResponseEntity.ok(ventasPagadas);
+    }
+
 
     @GetMapping
     public ResponseEntity<List<VentaDTO>> listarVentas() {

@@ -1,6 +1,7 @@
 package org.example.msfacturacion.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.msfacturacion.dato.FacturaDTO;
 import org.example.msfacturacion.dato.VentaDTO;
 import org.example.msfacturacion.entity.Factura;
 import org.example.msfacturacion.service.FacturaService;
@@ -18,9 +19,12 @@ public class FacturaController {
 
     /** Lista facturas con filtro opcional por cliente */
     @GetMapping
-    public ResponseEntity<List<Factura>> listar(@RequestParam(required = false) Long clienteId) {
-        return ResponseEntity.ok(
-                clienteId == null ? service.listar() : service.listarPorCliente(clienteId));
+    public ResponseEntity<List<FacturaDTO>> listar(@RequestParam(required = false) Long clienteId) {
+        List<Factura> facturas = clienteId == null ? service.listar() : service.listarPorCliente(clienteId);
+        List<FacturaDTO> response = facturas.stream()
+                .map(service::convertirAFacturaDTO)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     /** Ventas pagadas que aún no tienen factura */
@@ -31,7 +35,9 @@ public class FacturaController {
 
     /** Recibe lista de IDs de ventas y genera factura */
     @PostMapping
-    public ResponseEntity<Factura> generar(@RequestBody List<Long> ventaIds) {
-        return ResponseEntity.ok(service.generarFactura(ventaIds));
+    public ResponseEntity<FacturaDTO> generar(@RequestBody List<Long> ventaIds) {
+        Factura factura = service.generarFactura(ventaIds);
+        FacturaDTO dto = service.convertirAFacturaDTO(factura);
+        return ResponseEntity.ok(dto);
     }
 }

@@ -19,8 +19,11 @@ public class Factura {
     private BigDecimal total;
     private String estado;            // GENERADA | ANULADA
 
-    // Relación con ventas
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
+    /**
+     * Cargamos ventas en modo EAGER para evitar LazyInitializationException al serializar a JSON.
+     * Como cada Factura sólo contiene la lista de IDs y montos de ventas, el impacto de carga es bajo.
+     */
+    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FacturaVenta> ventas;
 
     public Long getId() {

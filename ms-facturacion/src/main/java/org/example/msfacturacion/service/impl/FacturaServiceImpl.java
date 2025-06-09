@@ -1,9 +1,9 @@
 package org.example.msfacturacion.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.msfacturacion.dato.*;
 import org.example.msfacturacion.entity.Factura;
 import org.example.msfacturacion.entity.FacturaVenta;
-import org.example.msfacturacion.dato.VentaDTO;
 import org.example.msfacturacion.feign.VentaFeign;
 import org.example.msfacturacion.repository.FacturaRepository;
 import org.example.msfacturacion.repository.FacturaVentaRepository;
@@ -27,16 +27,46 @@ public class FacturaServiceImpl implements FacturaService {
 
     private final AtomicLong secuencial = new AtomicLong(1);
 
+    /* ---------------- LISTAR ---------------- */
     @Override
+    @Transactional(readOnly = true)
     public List<Factura> listar() {
         return facturaRepo.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Factura> listarPorCliente(Long clienteId) {
         return facturaRepo.findByClienteId(clienteId);
     }
 
+    /* ---------- CONVERSIÓN A DTO COMPLETO ---------- */
+    public FacturaDTO convertirAFacturaDTO(Factura factura) {
+        FacturaDTO dto = new FacturaDTO();
+        dto.setId(factura.getId());
+        dto.setClienteId(factura.getClienteId());
+        dto.setFechaEmision(factura.getFechaEmision());
+        dto.setNumero(factura.getNumero());
+        dto.setEstado(factura.getEstado());
+        dto.setTotal(factura.getTotal());
+
+        List<FacturaVentaDetalleDTO> ventas = factura.getVentas().stream().map(fv -> {
+            FacturaVentaDetalleDTO vdto = new FacturaVentaDetalleDTO();
+            vdto.setId(fv.getId());
+            vdto.setVentaId(fv.getVentaId());
+            vdto.setFechaVenta(fv.getFechaVenta());
+            vdto.setTotalVenta(fv.getTotalVenta());
+
+            VentaDTO ventaCompleta = ventaFeign.obtenerVenta(fv.getVentaId());
+            vdto.setDetalles(ventaCompleta.getDetalles());
+            return vdto;
+        }).collect(Collectors.toList());
+
+        dto.setVentas(ventas);
+        return dto;
+    }
+
+    /* ---------- VENTAS PAGADAS SIN FACTURA ---------- */
     @Override
     public List<VentaDTO> ventasPorFacturar() {
         List<VentaDTO> pagadas = ventaFeign.listarPagadas();
@@ -45,6 +75,7 @@ public class FacturaServiceImpl implements FacturaService {
                 .collect(Collectors.toList());
     }
 
+    /* ---------- GENERAR FACTURA ---------- */
     @Override
     @Transactional
     public Factura generarFactura(List<Long> ventaIds) {
@@ -56,7 +87,8 @@ public class FacturaServiceImpl implements FacturaService {
         List<FacturaVenta> previas = fvRepo.findByVentaIdIn(ventaIds);
         if (!previas.isEmpty()) {
             throw new RuntimeException("Alguna venta ya fue facturada: " + previas.stream()
-                    .map(FacturaVenta::getVentaId).collect(Collectors.toList()));
+                    .map(FacturaVenta::getVentaId)
+                    .collect(Collectors.toList()));
         }
 
         // Obtener ventas

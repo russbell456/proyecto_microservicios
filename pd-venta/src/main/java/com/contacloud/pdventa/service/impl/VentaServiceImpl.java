@@ -186,7 +186,12 @@ public class VentaServiceImpl implements VentaService {
         return dto;
     }
 
-
+    @Override
+    public List<VentaDTO> listarVentasPorEstado(String estado) {
+        return ventaRepository.findByEstado(estado).stream()
+                .map(this::convertirVentaADTO)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<PagoDTO> obtenerTodosLosPagosDTO() {
