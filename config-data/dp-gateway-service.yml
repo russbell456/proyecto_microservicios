@@ -40,3 +40,7 @@ spring:
           uri: lb://pd-venta  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
           predicates:
             - Path=/ventas/**
+        - id: ms-facturacion-service  # El nombre de la ruta para enrutar las solicitudes
+          uri: lb://ms-facturacion-service # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          predicates:
+            - Path=/facturas/**
