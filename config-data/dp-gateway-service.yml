@@ -32,6 +32,10 @@ spring:
           uri: lb://dp-notificacion   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
           predicates:
             - Path=/notificaciones/**
+        - id: dp-inventario-service  # El nombre de la ruta para enrutar las solicitudes
+          uri: lb://dp-inventario-service   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          predicates:
+            - Path=/productos/**
         - id: dp-licencias  # El nombre de la ruta para enrutar las solicitudes
           uri: lb://dp-licencias   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
           predicates:

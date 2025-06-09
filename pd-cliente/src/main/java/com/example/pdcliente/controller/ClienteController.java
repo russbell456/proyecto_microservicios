@@ -13,7 +13,6 @@
 
     @RestController
     @RequestMapping("/clientes")
-    @CrossOrigin (origins = "http://localhost:3000")
     public class ClienteController  {
 
         @Autowired
